@@ -8,7 +8,7 @@ class InfoMessage:
         self.calories = calories    
 
     def get_message(self) -> str:
-        return 'Тип тренировки: {training_type}; Длительность: {duration} ч.; Дистанция: {distance} км; Ср. скорость: {speed} км/ч; Потрачено ккал: {calories}.'
+        return f'Тип тренировки: {self.training_type}; Длительность: {self.duration} ч.; Дистанция: {self.distance} км; Ср. скорость: {self.speed} км/ч; Потрачено ккал: {self.calories}.'
 
 
 class Training:
@@ -32,7 +32,7 @@ class Training:
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
-        return self.get_distance / self.duration
+        return self.get_distance() / self.duration
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
@@ -40,7 +40,7 @@ class Training:
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
-        return InfoMessage(self.training_type, self.duration, self.get_distance(), self.get_mean_speed(), self.get_spent_calories())
+        return InfoMessage(self.training_type, self.duration, self.get_distance(), self.get_mean_speed(), self.get_spent_calories()).get_message()
 
 
 class Running(Training):
@@ -94,11 +94,11 @@ class Swimming(Training):
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
     to_do = {
-        'RUN': Running(data[0], data[1], data[2]), 
-        'WLK': SportsWalking(data[0], data[1], data[2], data[3]),
-        'SWM': Swimming(data[0], data[1], data[2], data[3], data[4])
+        'RUN': Running, 
+        'WLK': SportsWalking,
+        'SWM': Swimming
     }
-    return to_do[workout_type]
+    return to_do[workout_type](*data)
 
 
 def main(training: Training) -> None:
