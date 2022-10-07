@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 
 
 @dataclass
@@ -56,9 +57,9 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
-    LEN_STEP = 0.65
-    CALORIES_MEAN_SPEED_MULTIPLIER = 18
-    CALORIES_MEAN_SPEED_SHIFT = 20
+    LEN_STEP: float = 0.65
+    CALORIES_MEAN_SPEED_MULTIPLIER: int = 18
+    CALORIES_MEAN_SPEED_SHIFT: int = 20
 
     def get_spent_calories(self) -> float:
         return ((self.CALORIES_MEAN_SPEED_MULTIPLIER
@@ -71,9 +72,9 @@ class Running(Training):
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
-    LEN_STEP = 0.65
-    CALORIES_WEIGHT_COEFF = 0.035
-    CALORIES_MEAN_SPEED_COEFF = 0.029
+    LEN_STEP: float = 0.65
+    CALORIES_WEIGHT_COEFF: float = 0.035
+    CALORIES_MEAN_SPEED_COEFF: float = 0.029
 
     def __init__(self,
                  action: int,
@@ -96,9 +97,9 @@ class SportsWalking(Training):
 
 class Swimming(Training):
     """Тренировка: плавание."""
-    LEN_STEP = 1.38
-    CALORIES_MEAN_SPEED_SHIFT = 1.1
-    CALORIES_MEAN_SPEED_MULTIPLIER = 2
+    LEN_STEP: float = 1.38
+    CALORIES_MEAN_SPEED_SHIFT: float = 1.1
+    CALORIES_MEAN_SPEED_MULTIPLIER: int = 2
 
     def __init__(self,
                  action: int,
@@ -123,7 +124,7 @@ class Swimming(Training):
                 * self.weight)
 
 
-def read_package(workout_type: str, data: list) -> Training:
+def read_package(workout_type: str, data: List) -> Training:
     """Прочитать данные полученные от датчиков."""
     to_do = {
         'RUN': Running,
@@ -131,10 +132,9 @@ def read_package(workout_type: str, data: list) -> Training:
         'SWM': Swimming
     }
 
-    try:
-        return to_do[workout_type](*data)
-    except Exception(ValueError):
+    if workout_type not in to_do:
         raise ValueError(f'Тренировки {workout_type}у нас нет')
+    return to_do[workout_type](*data)
 
 
 def main(training: Training) -> None:
